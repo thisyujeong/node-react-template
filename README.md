@@ -3,7 +3,7 @@
 
 # Index
 - [Initial Setting](#initial-setting)
-  - [package, 라이브러리 설치](#package,-라이브러리-설치)
+  - [package와 라이브러리 설치](#package와-라이브러리-설치)
   - [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#mongo-db-atlas-클러스터-생성-후-connect-url-발급)
   - [express와 mongoDB 연결](#express와-mongodb-연결)
   - [Initial Project Structure](#initial-project-structure)
@@ -18,7 +18,7 @@
 
 
 # Initial Setting
-## package, 라이브러리 설치
+## package와 라이브러리 설치
 
 ```jsx
 // package.json
