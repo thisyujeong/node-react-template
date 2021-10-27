@@ -1,7 +1,7 @@
 # node-react-template
-## Initial Setting
+노드 + 리액트 템플릿입니다.
 
-# 목차
+# Index
 1. [Initial Setting](#1.-Initial-Setting)    
   1-1. [package, 라이브러리 설치](#1-1.-package,-라이브러리-설치)    
   1-2. [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#1-2.-Mongo-DB-Atlas-클러스터-생성-후-Connect-URL-발급)    
@@ -11,19 +11,9 @@
 3. [Client & Server 통신](#3.-Client-&-Server-통신)    
   3-1. [body-parser 설치 및 불러오기](#3-1.-body-parser-설치-및-불러오기)    
   3-2. [Postman 설치](#3-2.-Postman-설치)
-4. [Register Route 생성](#4.-Register-Route-생성)
-  4-1. [User Model 불러오기](#4-1.-User-Model-불러오기)
-  4-2. [Register Route 작성](#4-2.-Register-Route-작성)
-
-
-
-## 4-1. 생성했던 **User Model** 불러오기
-```js
-/* server.js */
-const { User } = require('./models/Users'); 
-```
-
-## 4-2. Register Route 작성    
+4. [Register Route 생성](#4.-Register-Route-생성)    
+  4-1. [User Model 불러오기](#4-1.-User-Model-불러오기)    
+  4-2. [Register Route 작성](#4-2.-Register-Route-작성)    
 
 
 
