@@ -2,23 +2,23 @@
 노드 + 리액트 템플릿입니다.
 
 # Index
-- [Initial Setting](#1.-initial-setting)
-  - [package, 라이브러리 설치](#1-1.-package,-라이브러리-설치)
-  - [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#1-2.-mongo-db-atlas-클러스터-생성-후-cnnect-url-발급)
-  - [express / mongoDB 연결](#1-3.-express-/-mongodb-연결)
-  - [Initial Project Structure](#1-4.-initial-project-structure)
-- [MongoDB Model & Schema](#2.-mongoDB-model-&-schema)
-- [Client & Server 통신](#3.-client-&-server-통신)    
-  - [body-parser 설치 및 불러오기](#3-1.-body-parser-설치-및-불러오기)    
-  - [Postman 설치](#3-2.-postman-설치)
-- [Register Route 생성](#4.-register-route-생성)    
-  - [User Model 불러오기](#4-1.-user-model-불러오기)    
-  - [Register Route 작성](#4-2.-register-route-작성)    
-  - [Postman 으로 기능 확인](#4-3.-postman-으로-기능-확인)    
+- [Initial Setting](#initial-setting)
+  - [package, 라이브러리 설치](#package,-라이브러리-설치)
+  - [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#mongo-db-atlas-클러스터-생성-후-connect-url-발급)
+  - [express / mongoDB 연결](#express-/-mongodb-연결)
+  - [Initial Project Structure](#initial-project-structure)
+- [MongoDB Model & Schema](#mongodb-model-&-schema)
+- [Client & Server 통신](#client-&-server-통신)    
+  - [body-parser 설치 및 불러오기](#body-parser-설치-및-불러오기)    
+  - [Postman 설치](#postman-설치)
+- [Register Route 생성](#register-route-생성)    
+  - [User Model 불러오기](#user-model-불러오기)    
+  - [Register Route 작성](#register-route-작성)    
+  - [Postman 으로 기능 확인](#postman-으로-기능-확인)    
 
 
-# 1. Initial Setting
-## 1-1. package, 라이브러리 설치
+# Initial Setting
+## package, 라이브러리 설치
 
 ```jsx
 // package.json
@@ -51,10 +51,10 @@ npm install mongoose --save
 }
 ```
 
-## 1-2. Mongo DB Atlas 클러스터 생성 후 Connect URL 발급
+## Mongo DB Atlas 클러스터 생성 후 Connect URL 발급
 [MongDB Atlas](http://www.mongodb.com/)
 
-## 1-3. express / mongoDB 연결
+## express / mongoDB 연결
 
 ```jsx
 /* server.js */
@@ -72,7 +72,7 @@ app.get('/', (req, res) => res.send('Hello world!'));
 app.listen(port, () => console.log(`Express app listening on port ${port}!`));
 ```
 
-## 1-4. Initial Project Structure
+## Initial Project Structure
 
 ```bash
 ├── node_modules
@@ -83,7 +83,7 @@ app.listen(port, () => console.log(`Express app listening on port ${port}!`));
 └── server.js
 ```
 
-# 2. MongoDB Model & Schema
+# MongoDB Model & Schema
 
 1. Models 폴더 생성 
     
@@ -132,9 +132,9 @@ const User = mongoose.model('User', userSchema);
 module.exports = { User };
 ```
 
-# 3. Client & Server 통신
+# Client & Server 통신
 클라이언트와 서버 통신을 위한 세팅이 필요하다.
-## 3-1. body-parser 설치 및 불러오기
+## body-parser 설치 및 불러오기
 클라이언트와 서버 사이에서 데이터 전송을 담당하는 마둘웨어
 ### Install
 ```
@@ -151,23 +151,23 @@ app.use(bodyParser.urlencoded({extended: true}));
 // application/json
 app.use(bodyParser.json());
 ```
-## 3-2. Postman 설치
+## Postman 설치
 만들어진 클라이언트가 없어 데이터를 클라이언트에 전송할 수 없어 클라이언트를 대체하기 위해 postman 사용
 
 [Download Postman](https://www.postman.com/downloads/)
 
 
-# 4. Register Route 생성
+# Register Route 생성
 회원가입을 위한 register 라우트 생성하기
 
-## 4-1. **User Model** 불러오기
+## User Model 불러오기
 생성했던 User Model을 불러옴
 ```js
 /* server.js */
 const { User } = require('./models/Users'); 
 ```
 
-## 4-2. Register Route 작성    
+## Register Route 작성    
 - ```/register``` 경로로 post 요청    
 - mongoDB 의 메소드 ```save``` 를 사용해 User Model 에 데이터 저장
 ```js
@@ -183,7 +183,7 @@ app.post('/register', (req, res) => {
 });
 ```
 
-## 4-3. Postman 으로 기능 확인
+## Postman 으로 기능 확인
 1. http://localhost:5000/register 경로(설정한 경로)로 **Post** 요청
 2. **Body - raw - json** 설정
 3. 회원가입 정보 작성 후 **Send**
