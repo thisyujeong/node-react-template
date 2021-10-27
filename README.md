@@ -7,8 +7,8 @@
   - [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#mongo-db-atlas-클러스터-생성-후-connect-url-발급)
   - [express / mongoDB 연결](#express-/-mongodb-연결)
   - [Initial Project Structure](#initial-project-structure)
-- [MongoDB Model & Schema](#mongodb-model-&-schema)
-- [Client & Server 통신](#client-&-server-통신)    
+- [MongoDB Model과 Schema](#mongodb-model과-schema)
+- [Client와 Server 통신](#client와-server-통신)    
   - [body-parser 설치 및 불러오기](#body-parser-설치-및-불러오기)    
   - [Postman 설치](#postman-설치)
 - [Register Route 생성](#register-route-생성)    
@@ -83,7 +83,7 @@ app.listen(port, () => console.log(`Express app listening on port ${port}!`));
 └── server.js
 ```
 
-# MongoDB Model & Schema
+# MongoDB Model과 Schema
 
 1. Models 폴더 생성 
     
@@ -132,7 +132,7 @@ const User = mongoose.model('User', userSchema);
 module.exports = { User };
 ```
 
-# Client & Server 통신
+# Client와 Server 통신
 클라이언트와 서버 통신을 위한 세팅이 필요하다.
 ## body-parser 설치 및 불러오기
 클라이언트와 서버 사이에서 데이터 전송을 담당하는 마둘웨어
