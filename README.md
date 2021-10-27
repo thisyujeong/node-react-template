@@ -2,18 +2,20 @@
 노드 + 리액트 템플릿입니다.
 
 # Index
-1. [Initial Setting](#1.-Initial-Setting)    
+1. [Initial Setting](#1.-initial-setting)    
   1-1. [package, 라이브러리 설치](#1-1.-package,-라이브러리-설치)    
-  1-2. [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#1-2.-Mongo-DB-Atlas-클러스터-생성-후-Connect-URL-발급)    
-  1-3. [express / mongoDB 연결](#1-3.-express-/-mongoDB-연결)  
-  1-4. [Initial Project Structure](#1-4.-Initial-Project-Structure)   
-2. [MongoDB Model & Schema](#2.-MongoDB-Model-&-Schema)
-3. [Client & Server 통신](#3.-Client-&-Server-통신)    
+  1-2. [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#1-2.-mongo-db-atlas-클러스터-생성-후-cnnect-url-발급)    
+  1-3. [express / mongoDB 연결](#1-3.-express-/-mongodb-연결)  
+  1-4. [Initial Project Structure](#1-4.-initial-project-structure)   
+2. [MongoDB Model & Schema](#2.-mongoDB-model-&-schema)
+3. [Client & Server 통신](#3.-client-&-server-통신)    
   3-1. [body-parser 설치 및 불러오기](#3-1.-body-parser-설치-및-불러오기)    
-  3-2. [Postman 설치](#3-2.-Postman-설치)
-4. [Register Route 생성](#4.-Register-Route-생성)    
-  4-1. [User Model 불러오기](#4-1.-User-Model-불러오기)    
-  4-2. [Register Route 작성](#4-2.-Register-Route-작성)    
+  3-2. [Postman 설치](#3-2.-postman-설치)
+4. [Register Route 생성](#4.-register-route-생성)    
+  4-1. [User Model 불러오기](#4-1.-user-model-불러오기)    
+  4-2. [Register Route 작성](#4-2.-register-route-작성)    
+  4-3. [Postman 으로 기능 확인](#4-3.-postman-으로-기능-확인)    
+
 
 
 
