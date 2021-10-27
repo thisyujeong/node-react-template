@@ -2,15 +2,15 @@
 ## Initial Setting
 
 # 목차
-1. [Initial Setting](#Initial-Setting)    
-  a. [package, 라이브러리 설치](#1.-package,-라이브러리-설치)    
-  a. [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#2.-Mongo-DB-Atlas-클러스터-생성-후-Connect-URL-발급)    
-  c. [express / mongoDB 연결](#3.-express-/-mongoDB-연결)  
-  d. [Initial Project Structure](#Initial-Project-Structure)   
-2. [MongoDB Model & Schema](#MongoDB-Model-&-Schema)
+1. [Initial Setting](#1.-Initial-Setting)    
+  1-1. [package, 라이브러리 설치](#1-1.-package,-라이브러리-설치)    
+  1-2. [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#1-2.-Mongo-DB-Atlas-클러스터-생성-후-Connect-URL-발급)    
+  1-3. [express / mongoDB 연결](#1-3.-express-/-mongoDB-연결)  
+  1-4. [Initial Project Structure](#1-4.-Initial-Project-Structure)   
+2. [MongoDB Model & Schema](#2.-MongoDB-Model-&-Schema)
 
-# Initial Setting
-## 1. package, 라이브러리 설치
+# 1. Initial Setting
+## 1-1. package, 라이브러리 설치
 
 ```jsx
 // package.json
@@ -43,10 +43,10 @@ npm install mongoose --save
 }
 ```
 
-## 2. Mongo DB Atlas 클러스터 생성 후 Connect URL 발급
+## 1-2. Mongo DB Atlas 클러스터 생성 후 Connect URL 발급
 [MongDB Atlas](http://www.mongodb.com/)
 
-## 3. express / mongoDB 연결
+## 1-3. express / mongoDB 연결
 
 ```jsx
 // server.js
@@ -64,7 +64,7 @@ app.get('/', (req, res) => res.send('Hello world!'));
 app.listen(port, () => console.log(`Express app listening on port ${port}!`));
 ```
 
-### Initial Project Structure
+## 1-4. Initial Project Structure
 
 ```bash
 ├── node_modules
@@ -75,7 +75,7 @@ app.listen(port, () => console.log(`Express app listening on port ${port}!`));
 └── server.js
 ```
 
-# MongoDB Model & Schema
+# 2. MongoDB Model & Schema
 
 1. Models 폴더 생성 
     
