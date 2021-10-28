@@ -18,7 +18,9 @@
 - [Nodemon](#nodemon)    
   - [Install Nodemon](#install-nodemon)    
   - [Usage Nodemon](#usage-nodemon)    
-
+- [비밀 설정 정보 관리 env](#비밀-설정-정보-관리-env)    
+  - [환경에 따른 정보 전달](#환경에-따른-정보-전달)    
+  - [gitignore 오픈소스 업로드 방지](#gitignore-오픈소스-업로드-방지)    
 
 # Initial Setting
 ## package와 라이브러리 설치
@@ -240,23 +242,24 @@ npm install nodemon --save-dev
 
 ## 환경에 따른 정보 전달
 ### Development 환경
-**dev.js**
 ```js
+// dev.js
 module.exports = {
   mongoURI: 'mongoURI'
 }
 ```
 ### Production 환경
-**prod.js**
 ```js
+// prod.js
 module.exports = {
   mongoURI: process.env.MONGO_URI // heroku
 }
 ```
 ### Dev, Prod 환경 구분하여 정보 읽기
-**key.js**    
+
 Development 환경일 때 `dev.js` 에서, Production 환경일 때 `prod.js` 에서 정보를 가져옴
 ```js
+// key.js
 if(process.env.NODE_ENV === 'prov') { 
   module.exports = require('./prod');
 
@@ -264,7 +267,7 @@ if(process.env.NODE_ENV === 'prov') {
   module.exports = require('./dev');
 }
 ```
-## gitignore 
+## gitignore 오픈소스 업로드 방지
 **.gitignore** 에 민감한 정보가 들어있는 `dev.js` 추가
 ```
 dev.js
