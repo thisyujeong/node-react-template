@@ -4,13 +4,15 @@ const port = 5000;
 const bodyParser = require('body-parser');
 const { User } = require('./models/Users');
 
+const config = require('./config/key');
+
 // application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: true}));
 // application/json
 app.use(bodyParser.json());
 
 const mongoose = require('mongoose');
-mongoose.connect('mongoDB URL')
+mongoose.connect(config.mongoURI)
   .then(() => console.log('mongoDB Connected...'))
   .catch(err => console.log(err));
 

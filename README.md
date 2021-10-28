@@ -1,10 +1,10 @@
 # node-react-template
-노드 + 리액트 템플릿입니다.
+노드 + 리액트 템플릿입니다. ([참고](https://www.youtube.com/playlist?list=PL9a7QRYt5fqkZC9jc7jntD1WuAogjo_9T))
 
 # Index
 - [Initial Setting](#initial-setting)
   - [package와 라이브러리 설치](#package와-라이브러리-설치)
-  - [Mongo DB Atlas 클러스터 생성 후 Connect URL 발급](#mongo-db-atlas-클러스터-생성-후-connect-url-발급)
+  - [Mongo DB Atlas 클러스터 생성 후 Connect URI 발급](#mongo-db-atlas-클러스터-생성-후-connect-uri-발급)
   - [express와 mongoDB 연결](#express와-mongodb-연결)
   - [Initial Project Structure](#initial-project-structure)
 - [MongoDB Model과 Schema](#mongodb-model과-schema)
@@ -15,6 +15,9 @@
   - [User Model 불러오기](#user-model-불러오기)    
   - [Register Route 작성](#register-route-작성)    
   - [Postman 으로 기능 확인](#postman-으로-기능-확인)    
+- [Nodemon](#nodemon)    
+  - [Install Nodemon](#install-nodemon)    
+  - [Usage Nodemon](#usage-nodemon)    
 
 
 # Initial Setting
@@ -51,7 +54,7 @@ npm install mongoose --save
 }
 ```
 
-## Mongo DB Atlas 클러스터 생성 후 Connect URL 발급
+## Mongo DB Atlas 클러스터 생성 후 Connect URI 발급
 [MongDB Atlas](http://www.mongodb.com/)
 
 ## express와 mongoDB 연결
@@ -200,3 +203,69 @@ app.post('/register', (req, res) => {
       "success": true
     }
     ```
+
+# Nodemon
+> Nodemon 이란 소스가 변경되면 자동으로 서버를 재시작 해주는 툴
+## Install Nodemon
+```bash
+npm install nodemon --save-dev
+```
+여기서 `-dev`(development mode)는 local에서 작업할 때만 사용하겠다는 의미    
+
+## Usage Nodemon
+`package.json`파일에서 script를 추가해 Nodemon으로 서버를 시작
+```json
+// package.json
+"script": {
+  "start": "node server.js",
+  "backend": "nodemon server.js",
+  "test": "echo \"Error: no test specified\" && exit 1"
+}
+```
+이제 `npm run backend` 명령어로 서버를 켜고 변경사항이 있을 때마다 자동적으로 서버에 반영해줄 것이다.
+
+# 비밀 설정 정보 관리 env
+민감한 정보임과 동시에 보안이 이루어져야 하는 정보들을 암호화하기 위한 환경변수 env 사용
+
+개발을 할 때 두가지 환경이 있다.
+- Development 환경 (Local)
+- Production 환경 (Deploy 배포 후)    
+
+**Development** 환경에서는 로컬 js 파일 내에서 정보를 가져오도록하고,
+**Production** 환경에서는 Heroku 에서 정보를 가져오도록 함
+
+
+1. 최상위 폴더에 **config** 폴더 생성
+2. **config** 폴더 내 `dev.js` / `prod.js` / `key.js` 생성
+
+## 환경에 따른 정보 전달
+### Development 환경
+**dev.js**
+```js
+module.exports = {
+  mongoURI: 'mongoURI'
+}
+```
+### Production 환경
+**prod.js**
+```js
+module.exports = {
+  mongoURI: process.env.MONGO_URI // heroku
+}
+```
+### Dev, Prod 환경 구분하여 정보 읽기
+**key.js**    
+Development 환경일 때 `dev.js` 에서, Production 환경일 때 `prod.js` 에서 정보를 가져옴
+```js
+if(process.env.NODE_ENV === 'prov') { 
+  module.exports = require('./prod');
+
+} else {
+  module.exports = require('./dev');
+}
+```
+## gitignore 
+**.gitignore** 에 민감한 정보가 들어있는 `dev.js` 추가
+```
+dev.js
+```
