@@ -217,7 +217,6 @@ npm install nodemon --save-dev
 ## Usage Nodemon
 `package.json`파일에서 script를 추가해 Nodemon으로 서버를 시작
 ```json
-// package.json
 "script": {
   "start": "node server.js",
   "backend": "nodemon server.js",
@@ -262,7 +261,6 @@ Development 환경일 때 `dev.js` 에서, Production 환경일 때 `prod.js` �
 // key.js
 if(process.env.NODE_ENV === 'prov') { 
   module.exports = require('./prod');
-
 } else {
   module.exports = require('./dev');
 }
@@ -271,4 +269,64 @@ if(process.env.NODE_ENV === 'prov') {
 **.gitignore** 에 민감한 정보가 들어있는 `dev.js` 추가
 ```
 dev.js
+```
+
+# Bcrypt로 비밀번호 암호화
+약한 보안성을 Bcrypt를 통해 관리자도 비밀번호를 알 수 없도록 암호화하는 과정    
+
+## Bcrypt 설치와 사용
+### install
+```
+npm install bcrypt --save
+```
+### Bcrypt Usage
+Bcrypt 문서 참고하기 [Bcrypt 문서 바로가기](https://www.npmjs.com/package/bcrypt)
+```js
+const bcrypt = require('bcrypt');
+const saltRounds = 10; // 10자리의 암호화 바말번호
+
+bcrypt.genSalt(saltRounds, function(err, salt) {
+  bcrypt.hash(myPlaintextPassword, salt, function(err, hash) {
+    // Store hash in your password DB.
+  });
+});
+```
+
+## 암호화하기
+암호화 과정에서 유저 정보들을 DB에 저장히기 전이 비밀번호를 암호화할 타이밍인데,
+Register 라우트를 생성할 때 작성한 이 코드에서 `user.save()`하기 전이 바로 그 타이밍이다.
+```js
+/* models/User.js */
+app.post('/register', (req, res) => {
+  const user = new User(req.body); // user instance // user = collection 명
+  user.save((err, userInfo) => {  // mongoDB method; save into User Model 
+    if(err) return res.json({success:false, err})
+    return res.status(200).json({
+      success: true
+    })
+  });
+});
+```
+그렇다면 어디에서 작업을 해줄 것인가? User 스키마를 생성했던 **models/User.js** 에서 mongoose 의 미들웨어 기능인 `pre()`를 사용하여 `save` 전에 처리할 코드를 작성한다, `save` 외에 `init`, `validate`, `remove` 메소드가 있다.
+
+```js
+/* models/User.js */
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+...
+
+userSchema.pre('save', function( next ) { // 유저 정보를 저장하기 전 실행 함수
+  var user = this; // userSchema 스키마를 가리킴
+  if(user.isModified('password')) { // password가 변환될 때만 실행
+    bcrypt.genSalt(saltRounds, function(err, salt){
+      if(err) return next(err);
+      bcrypt.hash( user.password, salt, function(err, hash) { // hash 암호화 된 비밀번호
+        if(err) return next(err);
+        user.password = hash; // 비밀번호를 암호화된 비밀번호로 교체
+        next(); // register 라우트로 돌아가기
+      });
+    });
+  }
+})
 ```

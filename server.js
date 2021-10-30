@@ -19,7 +19,7 @@ mongoose.connect(config.mongoURI)
 app.get('/', (req, res) => res.send('Hello world!'));
 
 app.post('/register', (req, res) => {
-  const user = new User(req.body); // user instance
+  const user = new User(req.body); // user instance // user = collection 명
   user.save((err, userInfo) => {  // mongoDB method; save into User Model 
     if(err) return res.json({success:false, err})
     return res.status(200).json({
