@@ -21,6 +21,14 @@
 - [비밀 설정 정보 관리 env](#비밀-설정-정보-관리-env)    
   - [환경에 따른 정보 전달](#환경에-따른-정보-전달)    
   - [gitignore 오픈소스 업로드 방지](#gitignore-오픈소스-업로드-방지)    
+- [Bcrypt로 비밀번호 암호화](#bcrypt로-비밀번호-암호화)    
+  - [Bcrypt 설치와 사용](#bcrypt-설치와-사용)    
+  - [비밀번호 암호화하기](#비밀번호-암호화하기)    
+- [로그인 기능 구현하기](#로그인-기능-구현하기)
+  - [로그인 기능 구현 순서](#로그인-기능-구현-순서)
+  - [암호 비교 메소드 생성](#암호-비교-메소드-생성)
+  - [토큰을 생성하는 메소드 생성](#토큰을-생성하는-메소드-생성)
+  - [Login Route 생성 후 반영하기](#login-route-생성-후-반영하기)
 
 # Initial Setting
 ## package와 라이브러리 설치
@@ -275,11 +283,11 @@ dev.js
 약한 보안성을 Bcrypt를 통해 관리자도 비밀번호를 알 수 없도록 암호화하는 과정    
 
 ## Bcrypt 설치와 사용
-### install
+### Install
 ```
 npm install bcrypt --save
 ```
-### Bcrypt Usage
+### Usage
 Bcrypt 문서 참고하기 [Bcrypt 문서 바로가기](https://www.npmjs.com/package/bcrypt)
 ```js
 const bcrypt = require('bcrypt');
@@ -292,7 +300,7 @@ bcrypt.genSalt(saltRounds, function(err, salt) {
 });
 ```
 
-## 암호화하기
+## 비밀번호 암호화하기
 암호화 과정에서 유저 정보들을 DB에 저장히기 전이 비밀번호를 암호화할 타이밍인데,
 Register 라우트를 생성할 때 작성한 이 코드에서 `user.save()`하기 전이 바로 그 타이밍이다.
 ```js
@@ -314,7 +322,9 @@ app.post('/register', (req, res) => {
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-...
+const userSchema = mongoose.Schema({
+  ...
+});
 
 userSchema.pre('save', function( next ) { // 유저 정보를 저장하기 전 실행 함수
   var user = this; // userSchema 스키마를 가리킴
@@ -326,7 +336,106 @@ userSchema.pre('save', function( next ) { // 유저 정보를 저장하기 전 �
         user.password = hash; // 비밀번호를 암호화된 비밀번호로 교체
         next(); // register 라우트로 돌아가기
       });
-    });
+    });  
+  } else {
+    next();
   }
+});
+
+...
+```
+
+# 로그인 기능 구현하기
+## 로그인 기능 구현 순서
+1. 요청된 이메일이 DB에 있는지 찾는다.
+2. 요청된 이메일이 있다면 비밀번호와 일치하는가
+3. 비밀번호까지 일치하다면 토큰 생성
+
+## 암호 비교 메소드 생성
+원하는 메소드 명으로 생성해도 무관하다. 이 예제에서는 `comparePassword`으로 설정했다.
+```js
+/* methode/User.js */
+userSchema.methods.comparePassword = function(plainPassword, cb) {
+  bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
+    if(err) return cb(err);
+    cb(null, isMatch);
+      // 비밀번호까지 일치하다면 토큰 생성
+  })
+}
+```
+
+## 토큰을 생성하는 메소드 생성
+원하는 메소드 명으로 생성해도 무관하다. 이 예제에서는 `generateToken`으로 설정했다.
+메소드를 생성하기전에 두가지 라이브러리 설치가 필요하다
+1. jsonwebtoken
+2. cookie-parser
+### jsonwebtoken 라이브러리 설치
+Token 생성을 위한 라이브러리 다운로드
+```
+npm install jsonwebtoken --save
+```
+#### Usage
+[문서 바로가기](https://www.npmjs.com/package/jsonwebtoken)
+```js
+var jwt = require('jsonwebtoken');
+var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+```
+### 
+
+### Cookie Parser 라이브러리 설치
+토큰을 쿠키에 저장하기 위한 라이브러리 다운로드
+```
+npm install cookie-parser --save
+```
+#### Usage
+```js
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+```
+
+### Token 생성 메소드 생성
+```js
+const jwt = require('jsonwebtoken');
+
+userSchema.methods.generateToken = function(cb) {
+  let user = this;
+  // jsonwebtoken을 이용해 token 생성하기
+  let token = jwt.sign(user._id.toHexString(), 'secretToken'); // user._id + 'secretToken' = token
+  user.token = token;
+  user.save(function(err, user){
+    if(err) return cb(err);
+    cb(null, user);
+  })
+}
+```
+## Login Route 생성 후 반영하기
+1. 요청된 이메일이 DB에 있는지 찾는다.
+2. 요청된 이메일이 있다면 비밀번호와 일치하는가
+3. 비밀번호까지 일치하다면 토큰 생성
+```js
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+app.post('/login', (req, res) => {
+  // 1. 요청된 이메일을 DB에서 있는지 찾는다.
+  User.findOne({ email: req.body.email }, (err, user) => {
+    if(!user) {
+      return res.json ({
+        loginSuccess: false,
+        message: '제공된 이메일에 해당하는 유저가 없습니다.'
+      })
+    }
+    // 2. 요청된 이메일이 있다면 비밀번호가 일치하는가
+    user.comparePassword(req.body.password, (err, isMatch) => { 
+      // 비밀번호까지 일치하다면 토큰 생성
+      user.generateToken((err, user) => { // user에는 받아온 토큰이 들어있음
+        if(err) return res.status(400).send(err);
+        // 3. token을 저장한다. 어디에? 쿠키, 로컬스토리지 
+        res.cookie('x_auth', user.token)
+        .status(200)
+        .json({loginSuccess: true, userId: user._id})
+      });
+    }) 
+  })
 })
 ```
