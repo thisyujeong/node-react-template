@@ -32,6 +32,7 @@
 - [Auth 기능 구현하기](#auth-기능-구현하기)
   - [미들웨어 생성하기](#미들웨어-생성하기)
   - [미들웨어 적용 및 Auth 기능 구현](#미들웨어-적용-및-auth-기능-구현)
+- [Logout 기능 구현하기](#Logout-기능-구현하기)
 
 # Initial Setting
 ## package와 라이브러리 설치
@@ -421,7 +422,7 @@ userSchema.methods.generateToken = function(cb) {
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-app.post('api/users/login', (req, res) => {
+app.post('/api/users/login', (req, res) => {
   // 1. 요청된 이메일을 DB에서 있는지 찾는다.
   User.findOne({ email: req.body.email }, (err, user) => {
     if(!user) {
@@ -499,7 +500,8 @@ userSchema.statics.findByToken = function(token, cb) {
 ## 미들웨어 적용 및 Auth 기능 구현
 get / post 요청 시 두번째 파라미터로 미들웨어를 직접 생성해 전달할 수 있어 콜백함수가 실행되기 전에 미들웨어가 실행된다. 미들웨어가 콜백함수까지 통과해 왔다는 것은 Authentication이 True 라는 의미이다.
 ```js
-app.get('api/users/auth', auth, (req, res) => { // auth 미들웨어
+/* server.js */
+app.get('/api/users/auth', auth, (req, res) => { // auth 미들웨어
   res.status(200).json({
     _id: req.user_id,
     isAdmin: req.user.role == 0 ? false : true,
@@ -509,5 +511,28 @@ app.get('api/users/auth', auth, (req, res) => { // auth 미들웨어
     role: req.user.role,
     image: req.user.image
   });
+});
+```
+
+# Logout 기능 구현하기
+로그아웃 기능 구현은 생각보다 간단하다.
+
+> 1. 로그아웃 Route 생성
+> 2. 로그아웃 하려는 유저를 DB에서 찾는다.
+> 3. 해당 유저의 토큰을 제거한다.
+
+Mongoose 의 `findOneUpdate` 를 사용해 DB의 토큰을 제거한다.
+
+```js
+app.get('/api/users/logout', auth, (req, res) => {
+  User.findOneAndUpdate({ _id: req.user._id },
+    { token: "" },
+    (err, user) => {
+      if(err) return res.json({ success: false, err });
+      return res.status(200).send({
+        success: true
+      });
+    }
+  )
 });
 ```

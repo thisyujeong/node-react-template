@@ -4,6 +4,7 @@ const port = 5000;
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { User } = require('./models/Users');
+const { auth } = require('./middleware/auth');
 
 const config = require('./config/key');
 
@@ -20,7 +21,7 @@ mongoose.connect(config.mongoURI)
 
 app.get('/', (req, res) => res.send('Hello world!'));
 
-/* Register Route */
+/* Register */
 app.post('/api/users/register', (req, res) => {
   const user = new User(req.body); // user instance // user = collection 명
   user.save((err, userInfo) => {  // mongoDB method; save into User Model 
@@ -31,7 +32,7 @@ app.post('/api/users/register', (req, res) => {
   });
 });
 
-/* Route Route */
+/* login */
 app.post('/api/users/login', (req, res) => {
   // 요청된 이메일을 DB에서 있는지 찾는다.
   User.findOne({ email: req.body.email }, (err, user) => {
@@ -56,7 +57,8 @@ app.post('/api/users/login', (req, res) => {
   })
 })
 
-app.get('api/users/auth', auth, (req, res) => { // auth 미들웨어
+/* auth */
+app.get('/api/users/auth', auth, (req, res) => { // auth 미들웨어
   res.status(200).json({
     _id: req.user_id,
     isAdmin: req.user.role == 0 ? false : true,
@@ -67,6 +69,18 @@ app.get('api/users/auth', auth, (req, res) => { // auth 미들웨어
     image: req.user.image
   });
 });
+
+app.get('/api/users/logout', auth, (req, res) => {
+  User.findOneAndUpdate({ _id: req.user._id },
+    { token: "" },
+    (err, user) => {
+      if(err) return res.json({ success: false, err });
+      return res.status(200).send({
+        success: true
+      })
+    }
+  )
+})
 
 app.listen(port, () => console.log(`Express app listening on port ${port}!`));
 
