@@ -2,6 +2,7 @@
 노드 + 리액트 템플릿입니다. ([참고](https://www.youtube.com/playlist?list=PL9a7QRYt5fqkZC9jc7jntD1WuAogjo_9T))
 
 # Index
+### Server
 - [Initial Setting](#initial-setting)
   - [package와 라이브러리 설치](#package와-라이브러리-설치)
   - [Mongo DB Atlas 클러스터 생성 후 Connect URI 발급](#mongo-db-atlas-클러스터-생성-후-connect-uri-발급)
@@ -33,6 +34,11 @@
   - [미들웨어 생성하기](#미들웨어-생성하기)
   - [미들웨어 적용 및 Auth 기능 구현](#미들웨어-적용-및-auth-기능-구현)
 - [Logout 기능 구현하기](#Logout-기능-구현하기)
+
+### Client
+- [Client와 Server 분리](#Client와-Server-분리)
+- [CRA 리액트 시작하기](#CRA-리액트-시작하기)
+
 
 # Initial Setting
 ## package와 라이브러리 설치
@@ -524,6 +530,7 @@ app.get('/api/users/auth', auth, (req, res) => { // auth 미들웨어
 Mongoose 의 `findOneUpdate` 를 사용해 DB의 토큰을 제거한다.
 
 ```js
+/* server.js */
 app.get('/api/users/logout', auth, (req, res) => {
   User.findOneAndUpdate({ _id: req.user._id },
     { token: "" },
@@ -535,4 +542,19 @@ app.get('/api/users/logout', auth, (req, res) => {
     }
   )
 });
+``` 
+
+# Client와 Server 분리
+1. 최상위 폴터에 Clent와 Server 디렉토리 생성
+2. `/server.js` / `config` 폴더 / `middleware` 폴더 를 Server 에 옮긴다.    
+    주의: `import`와 같은 파일 경로도 함께 바꿔야함.
+3. Client 폴더로 들어가 CRA 라액트 시작하기
+
+# CRA 리액트 시작하기
+> Create-React-App
+### install
+```
+npx create-react-app .
+npm init react-app .
+yarn create react-app .
 ```
