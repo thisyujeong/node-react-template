@@ -20,7 +20,8 @@ mongoose.connect(config.mongoURI)
 
 app.get('/', (req, res) => res.send('Hello world!'));
 
-app.post('/register', (req, res) => {
+/* Register Route */
+app.post('/api/users/register', (req, res) => {
   const user = new User(req.body); // user instance // user = collection 명
   user.save((err, userInfo) => {  // mongoDB method; save into User Model 
     if(err) return res.json({success:false, err})
@@ -30,7 +31,8 @@ app.post('/register', (req, res) => {
   });
 });
 
-app.post('/login', (req, res) => {
+/* Route Route */
+app.post('/api/users/login', (req, res) => {
   // 요청된 이메일을 DB에서 있는지 찾는다.
   User.findOne({ email: req.body.email }, (err, user) => {
     if(!user) {
@@ -39,7 +41,6 @@ app.post('/login', (req, res) => {
         message: '제공된 이메일에 해당하는 유저가 없습니다.'
       })
     }
-
     // 요청된 이메일이 있다면 비밀번호가 일치하는가
     // 입력한 비밀번호와 DB에 있는 암호화된 비밀번호 일치 여부 확인
     user.comparePassword(req.body.password, (err, isMatch) => { 
@@ -54,6 +55,18 @@ app.post('/login', (req, res) => {
     }) 
   })
 })
+
+app.get('api/users/auth', auth, (req, res) => { // auth 미들웨어
+  res.status(200).json({
+    _id: req.user_id,
+    isAdmin: req.user.role == 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    role: req.user.role,
+    image: req.user.image
+  });
+});
 
 app.listen(port, () => console.log(`Express app listening on port ${port}!`));
 

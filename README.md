@@ -29,6 +29,9 @@
   - [암호 비교 메소드 생성](#암호-비교-메소드-생성)
   - [토큰을 생성하는 메소드 생성](#토큰을-생성하는-메소드-생성)
   - [Login Route 생성 후 반영하기](#login-route-생성-후-반영하기)
+- [Auth 기능 구현하기](#auth-기능-구현하기)
+  - [미들웨어 생성하기](#미들웨어-생성하기)
+  - [미들웨어 적용 및 Auth 기능 구현](#미들웨어-적용-및-auth-기능-구현)
 
 # Initial Setting
 ## package와 라이브러리 설치
@@ -181,11 +184,11 @@ const { User } = require('./models/Users');
 ```
 
 ## Register Route 작성    
-- ```/register``` 경로로 post 요청    
+- ```api/users/register``` 경로로 post 요청    
 - mongoDB 의 메소드 ```save``` 를 사용해 User Model 에 데이터 저장
 ```js
 /* server.js */
-app.post('/register', (req, res) => {
+app.post('api/users/register', (req, res) => {
   const user = new User(req.body); // user instance
   user.save((err, userInfo) => {  // mongoDB method; save into User Model 
     if(err) return res.json({success:false, err})
@@ -197,7 +200,7 @@ app.post('/register', (req, res) => {
 ```
 
 ## Postman 으로 기능 확인
-1. http://localhost:5000/register 경로(설정한 경로)로 **Post** 요청
+1. http://localhost:5000/api/users/register 경로(설정한 경로)로 **Post** 요청
 2. **Body - raw - json** 설정
 3. 회원가입 정보 작성 후 **Send**
     ```json
@@ -305,7 +308,7 @@ bcrypt.genSalt(saltRounds, function(err, salt) {
 Register 라우트를 생성할 때 작성한 이 코드에서 `user.save()`하기 전이 바로 그 타이밍이다.
 ```js
 /* models/User.js */
-app.post('/register', (req, res) => {
+app.post('api/users/register', (req, res) => {
   const user = new User(req.body); // user instance // user = collection 명
   user.save((err, userInfo) => {  // mongoDB method; save into User Model 
     if(err) return res.json({success:false, err})
@@ -354,7 +357,7 @@ userSchema.pre('save', function( next ) { // 유저 정보를 저장하기 전 �
 ## 암호 비교 메소드 생성
 원하는 메소드 명으로 생성해도 무관하다. 이 예제에서는 `comparePassword`으로 설정했다.
 ```js
-/* methode/User.js */
+/* models/User.js */
 userSchema.methods.comparePassword = function(plainPassword, cb) {
   bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
     if(err) return cb(err);
@@ -395,6 +398,7 @@ app.use(cookieParser());
 
 ### Token 생성 메소드 생성
 ```js
+/* models/User.js */
 const jwt = require('jsonwebtoken');
 
 userSchema.methods.generateToken = function(cb) {
@@ -413,10 +417,11 @@ userSchema.methods.generateToken = function(cb) {
 2. 요청된 이메일이 있다면 비밀번호와 일치하는가
 3. 비밀번호까지 일치하다면 토큰 생성
 ```js
+/* server.js */
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-app.post('/login', (req, res) => {
+app.post('api/users/login', (req, res) => {
   // 1. 요청된 이메일을 DB에서 있는지 찾는다.
   User.findOne({ email: req.body.email }, (err, user) => {
     if(!user) {
@@ -438,4 +443,71 @@ app.post('/login', (req, res) => {
     }) 
   })
 })
+```
+
+# Auth 기능 구현하기
+#### Why & What?
+1. 페이지 이동 때마다 로그인되었는지 안되어있는지, 관리자 유저인지 등을 체크
+2. 글을 쓸 때나 지울 때 등 권한이 있는지 체크
+
+
+## 미들웨어 생성하기
+최상위 루트에 `middleware` 디렉토리를 생성 후 `auth.js` 파일 생성
+```js
+/* middleware/auth.js */
+let auth = (req, res, next) => {
+  // 인증 처리를 하는 곳
+  // 클라이언트 쿠키에서 토큰을 가져온다.
+  let token = req.cookies.x_auth;
+
+  // 토큰 복호화 후 유저 찾기
+  User.findByToken(token, (err, user) => {
+    if(err) throw err;
+    if(!user) return res.json({ isAuth: false, error: true });
+
+    req.token = token;
+    req.user = user;
+    next();
+  })
+} 
+
+module.exports = { auth };
+```
+### 토큰 복호화 후 유저를 찾는 statics 생성
+토큰 복호화 후 유저를 찾는 UserSchema의 `findByToken` 메소드 생성
+
+#### **methods**와 **statics**의 차이점
+`methods`는 이 method를 호출한 객체가 method 내에서의 this가 되고,    
+`statics`는 이 static를 호출한 객체에 상관없이 this가 모델 자체가 된다.
+```js
+/* models/user.js */
+userSchema.statics.findByToken = function(token, cb) {
+  let user = this;
+
+  // 토큰을 decode(복호화)
+  jwt.verify(token, 'secretToken', function(err, decoded) {
+    // 유저 아이디를 이용해 유저를 찾은 후 
+    // 클라이언트에서 가져온 token과 DB에 보관된 token이 일치하는지 확인
+    user.findOne({"_id": decoded, "token": token}, function(err, user){
+      if(err) return cb(err);
+      cb(null, user);
+    }) 
+  })
+}
+```
+
+## 미들웨어 적용 및 Auth 기능 구현
+get / post 요청 시 두번째 파라미터로 미들웨어를 직접 생성해 전달할 수 있어 콜백함수가 실행되기 전에 미들웨어가 실행된다. 미들웨어가 콜백함수까지 통과해 왔다는 것은 Authentication이 True 라는 의미이다.
+```js
+app.get('api/users/auth', auth, (req, res) => { // auth 미들웨어
+  res.status(200).json({
+    _id: req.user_id,
+    isAdmin: req.user.role == 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    role: req.user.role,
+    image: req.user.image
+  });
+});
 ```

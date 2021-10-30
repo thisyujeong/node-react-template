@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema({
     type: String,
     maxlength: 50,
   },
-  role: { // ex) number가 1 이면 일반 유저, 0 이면 관리자
+  role: { // ex) 0이면 일반유저, 1이면 관리자
     type: Number,
     default: 0,
   },
@@ -67,6 +67,23 @@ userSchema.methods.generateToken = function(cb) {
   user.save(function(err, user){
     if(err) return cb(err);
     cb(null, user);
+  })
+}
+
+/* methods, statics 차이점 */
+// methods는 이 method를 호출한 객체가 method 내에서의 this가 되고,
+// statics는 이 static를 호출한 객체에 상관없이 this가 모델 자체가 된다.
+userSchema.statics.findByToken = function(token, cb) {
+  let user = this;
+
+  // 토큰을 decode(복호화)
+  jwt.verify(token, 'secretToken', function(err, decoded) {
+    // 유저 아이디를 이용해 유저를 찾은 후 
+    // 클라이언트에서 가져온 token과 DB에 보관된 token이 일치하는지 확인
+    user.findOne({"_id": decoded, "token": token}, function(err, user){
+      if(err) return cb(err);
+      cb(null, user);
+    }) 
   })
 }
 
