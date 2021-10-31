@@ -33,18 +33,21 @@
 - [Auth 기능 구현하기](#auth-기능-구현하기)
   - [미들웨어 생성하기](#미들웨어-생성하기)
   - [미들웨어 적용 및 Auth 기능 구현](#미들웨어-적용-및-auth-기능-구현)
-- [Logout 기능 구현하기](#Logout-기능-구현하기)
+- [Logout 기능 구현하기](#logout-기능-구현하기)
 
 ### Client
-- [Client와 Server 분리](#Client와-Server-분리)
+- [Client와 Server 분리](#client와-server-분리)
   - [폴더 분리 후 프로젝트 구조](#폴더-분리-후-프로젝트-구조)
-- [CRA 리액트 시작하기](#CRA-리액트-시작하기)
-  - [Client 프로젝트 구조 세팅](#Client-프로젝트-구조-세팅)
-- [React Router Dom](#React-Router-Dom)
+- [CRA 리액트 시작하기](#cra-리액트-시작하기)
+  - [Client 프로젝트 구조 세팅](#client-프로젝트-구조-세팅)
+- [React Router Dom](#react-router-dom)
   - [리액트 라우터 사용](#리액트-라우터-사용)
-- [CORS 이슈 프록시로 해결](#CORS-이슈-프록시로-해결)
-- [Front와 Back 서버 한 번에 켜기](#Front와-Back-서버-한-번에-켜기)
+- [CORS 이슈 프록시로 해결](#cors-이슈-프록시로-해결)
+- [Front와 Back 서버 한 번에 켜기](#front와-back-서버-한-번에-켜기)
   - [concurrently 라이브러리](#concurrently-라이브러리)
+- [Antd CSS Framwork](#antd-css-framwork)
+- [Setting Up Redux](#setting-up-redux)
+  - [Redux 기본 구조 만들기](#redux-기본-구조-만들기)
 
 # Initial Setting
 ## package와 라이브러리 설치
