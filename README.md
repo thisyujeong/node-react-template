@@ -637,7 +637,7 @@ npm으로 설치했더니 패키지, 라이브러리 등의 버전에 의해 취
 
 ### 리액트 라우터 사용
 ```js
-/* clinet/App.js */
+/* clinet/src/App.js */
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -679,6 +679,7 @@ yarn add http-proxy-middleware --save
 1. `src/setupProxy.js`해당 경로에 파일 추가
 2. `target` 을 server 포트로 설정
     ```js
+    /* client/src/setupProxy.js */    
     const { createProxyMiddleware } = require('http-proxy-middleware');
 
     module.exports = function(app) {
@@ -724,7 +725,7 @@ yarn add antd
 ```
 #### Usage
 ```js
-/* client/index.js */
+/* client/src/index.js */
 import "antd/dist/antd.css";
 ```
 
@@ -749,7 +750,7 @@ yarn add react react-redux redux-promise redux-thunk --save
 ## Redux 기본 구조 만들기 
 ### Store 생성 및 적용
 ```js
-/* client/index.js */
+/* client/src/index.js */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -780,6 +781,7 @@ reportWebVitals();
 
 Provider 의 store로 `Reducer`와 함께 Redux DevTools를 연결
 ```js
+/* client/src/index.js */
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(Reducer, 
     window.__REDUX_DEVTOOLS_EXTENSION__ 
@@ -794,6 +796,7 @@ ReactDOM.render(
 ### Reducers
 각 기능에 따른 리듀서 생성 후 combineReducers 를 이용해 하나의 rootRecuder로 합쳐주는 작업
 ```js
+/* client/src/_reducers/index.js */
 import { combineReducers } from 'redux';
 import  user from './user_recuder';
 
