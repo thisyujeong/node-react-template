@@ -44,7 +44,7 @@
   - [리액트 라우터 사용](#리액트-라우터-사용)
 - [CORS 이슈 프록시로 해결](#CORS-이슈-프록시로-해결)
 - [Front와 Back 서버 한 번에 켜기](#Front와-Back-서버-한-번에-켜기)
-  -[concurrently 라이브러리](#concurrently-라이브러리)
+  - [concurrently 라이브러리](#concurrently-라이브러리)
 
 # Initial Setting
 ## package와 라이브러리 설치
@@ -711,3 +711,93 @@ yarn add concurrently --save
 },
 ```
 root 경로의 명령어를 실행하는 것이 아닌 서브 폴더의 명령어를 실행하고 싶다면 명령어 --prefix 폴더명 을 입력. 위 예시 코드와 같이 작성했다면 `npm run dev` 명령어로 실행시켜 server와 client 가 동시에 실행된 것을 확인 가능.
+
+# Antd CSS Framwork
+Ant Design 프래임워크 사용 [문서 바로가기](https://ant.design/)
+#### install 
+```
+npm install antd
+yarn add antd
+```
+#### Usage
+```js
+/* client/index.js */
+import "antd/dist/antd.css";
+```
+
+# Setting Up Redux
+### 다운 받아야 할 Dependency
+1. redux
+2. react-redux
+3. redux-promise
+4. redux-thunk
+
+`redux-promise` 와 `redux-thunk`는 리덕스의 미들웨어
+
+`redux-thunk` 는 function이 dispatch한테 어떻게 접근했는지를 알려주는 역할.
+`redux-promise`는 dispatch 가 promise를 받았을 때 어떻게 대처해야하는지를 알려주는 역할.
+
+#### install 
+```
+npm install react react-redux redux-promise redux-thunk --save
+yarn add react react-redux redux-promise redux-thunk --save
+```
+ 
+## Redux 기본 구조 만들기 
+### Store 생성 및 적용
+```js
+/* client/index.js */
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import "antd/dist/antd.css";
+
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore } from 'redux';
+import promiseMiddleware from 'redux-promise';
+import ReduxThunk from 'redux-thunk';
+import Reducer from './_reducers';
+
+// 스토어를 Redux 미들웨어인 `redux-thunk`와 `redux-promise`를 함께 사용하기 위해 이와 같이 생성
+const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore);
+
+ReactDOM.render(
+  <Provider store={createStoreWithMiddleware(Reducer)}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+
+reportWebVitals();
+```
+### Redux DevTools 사용
+[Chrome - Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=ko) | [Git 문서](https://github.com/zalmoxisus/redux-devtools-extension)    
+
+Provider 의 store로 `Reducer`와 함께 Redux DevTools를 연결
+```js
+ReactDOM.render(
+  <Provider store={createStoreWithMiddleware(Reducer, 
+    window.__REDUX_DEVTOOLS_EXTENSION__ 
+    && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+```
+
+### Reducers
+각 기능에 따른 리듀서 생성 후 combineReducers 를 이용해 하나의 rootRecuder로 합쳐주는 작업
+```js
+import { combineReducers } from 'redux';
+import  user from './user_recuder';
+
+const rootReducer = combineReducers({
+  user,
+  ...
+})
+
+export default rootReducer;
+```
