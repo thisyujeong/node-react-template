@@ -40,8 +40,11 @@
   - [폴더 분리 후 프로젝트 구조](#폴더-분리-후-프로젝트-구조)
 - [CRA 리액트 시작하기](#CRA-리액트-시작하기)
   - [Client 프로젝트 구조 세팅](#Client-프로젝트-구조-세팅)
-- [React Router Dom](#-React-Router-Dom)
-
+- [React Router Dom](#React-Router-Dom)
+  - [리액트 라우터 사용](#리액트-라우터-사용)
+- [CORS 이슈 프록시로 해결](#CORS-이슈-프록시로-해결)
+- [Front와 Back 서버 한 번에 켜기](#Front와-Back-서버-한-번에-켜기)
+  -[concurrently 라이브러리](#concurrently-라이브러리)
 
 # Initial Setting
 ## package와 라이브러리 설치
@@ -628,3 +631,83 @@ npm install react-router-dom --save
 yarn install react-router-dom --save
 ```
 npm으로 설치했더니 패키지, 라이브러리 등의 버전에 의해 취약점 경고가 발생해 npm 이 아닌 yarn으로 설치하니 경고 없이 설치되었다.
+
+### 리액트 라우터 사용
+```js
+/* clinet/App.js */
+import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import LandingPage from './components/views/LandingPage/LandingPage';
+import LoginPage from './components/views/LoginPage/LoginPage';
+import RegisterPage from './components/views/RegisterPage/RegisterPage';
+
+function App() {
+  return (
+    <Router>
+      <div>
+        <Switch>
+          <Route exact path="/" component={LandingPage}></Route>
+          <Route exact path="/login" component={LoginPage}></Route>
+          <Route exact path="/register" component={RegisterPage}></Route>
+        </Switch>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+```
+
+# CORS 이슈 프록시로 해결
+Server 의 포트는 5000, Client 의 포트는 3000으로 서로 다른 포트로 설정되어있다. 이처럼 두 개의 다른 포트를 가지고 있는 서버는 아무 설정 없이 Request를 보낼 수 없다. CORS 정책에 의해 보안상의 이유로 요청을 차단하는 이슈이다. 이를 해결할 수 있는 방법 중 하나인 프록시를 사용했다.
+
+## http-proxy-middleware
+[문서 바로가기 CRA - Proxying in Development](https://create-react-app.dev/docs/proxying-api-requests-in-development)
+#### install
+```
+npm install http-proxy-middleware --save
+yarn add http-proxy-middleware --save
+```
+
+1. `src/setupProxy.js`해당 경로에 파일 추가
+2. `target` 을 server 포트로 설정
+    ```js
+    const { createProxyMiddleware } = require('http-proxy-middleware');
+
+    module.exports = function(app) {
+      app.use(
+        '/api',
+        createProxyMiddleware({
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+        })
+      );
+    };
+    ```
+3. `npm run start`로 실행 가능
+
+# Front와 Back 서버 한 번에 켜기
+### concurrently 라이브러리
+>  Server와 Client의 서버를 한번에 켤 수 있는 라이브러리
+
+#### install 
+```
+npm install concurrently --save
+yarn add concurrently --save
+```
+
+#### package.json 에서 스크립트 설정하기
+`dev`항목을 추가헤 concurrently 라이브러리의 문법에 따라 명령어 앞에 `concurrently` 를 명시해주고, `\" \"` 안에 차례로 명령어 작성
+```json
+"scripts": {
+  "start": "node server.js",
+  "backend": "nodemon ./server/server.js",
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "dev": "concurrently \"npm run backend\" \"npm run start --prefix client\""
+},
+```
+root 경로의 명령어를 실행하는 것이 아닌 서브 폴더의 명령어를 실행하고 싶다면 명령어 --prefix 폴더명 을 입력. 위 예시 코드와 같이 작성했다면 `npm run dev` 명령어로 실행시켜 server와 client 가 동시에 실행된 것을 확인 가능.
