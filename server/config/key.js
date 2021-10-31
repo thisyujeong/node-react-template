@@ -1,4 +1,4 @@
-if(process.env.NODE_ENV === 'prov') {
+if(process.env.NODE_ENV === 'prod') {
   module.exports = require('./prod');
 
 } else {

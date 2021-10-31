@@ -37,7 +37,9 @@
 
 ### Client
 - [Client와 Server 분리](#Client와-Server-분리)
+  - [폴더 분리 후 프로젝트 구조](#폴더-분리-후-프로젝트-구조)
 - [CRA 리액트 시작하기](#CRA-리액트-시작하기)
+  - [Client 프로젝트 구조 세팅](#Client-프로젝트-구조-세팅)
 
 
 # Initial Setting
@@ -546,9 +548,28 @@ app.get('/api/users/logout', auth, (req, res) => {
 
 # Client와 Server 분리
 1. 최상위 폴더에 Client와 Server 디렉토리 생성
-2. `/server.js` / `config` 폴더 / `middleware` 폴더 를 Server 에 옮긴다.    
-    주의: `import`와 같은 파일 경로도 함께 바꿔야함.
+2. `/server.js` 파일과 `config` / `middleware` / `models` 폴더를 Server 폴더에 옮긴다.    
+    **주의: `import`와 같은 파일 경로도 함께 바꿔야함.**
 3. Client 폴더로 들어가 CRA 라액트 시작하기
+
+### 폴더 분리 후 프로젝트 구조
+```bash
+├── node_modules
+├── client
+├── server
+│   ├── config
+│   │   ├── dev.js
+│   │   ├── key.js
+│   │   └── prod.js
+│   │
+│   ├── middleware
+│   └── models
+│       └── Users.js
+├── .gitignore
+├── package-lock.json
+└── package.json
+```
+
 
 # CRA 리액트 시작하기
 > Create-React-App
@@ -557,4 +578,42 @@ app.get('/api/users/logout', auth, (req, res) => {
 npx create-react-app .
 npm init react-app .
 yarn create react-app .
+```
+
+# Client 프로젝트 구조 세팅
+프로젝트에 필요한 구조를 사전에 세팅. `actions`, `reducers`, `components`, `hoc`, `utils`, `config.js` 등의 폴더 / 파일을 생성한다. 프로젝트 상세 구조는 이와 같다.
+
+기본 구조에서 추가된 폴더 / 파일은 `*` 로 표시
+```bash
+├── client
+│   ├── public
+│   └── src
+│       ├── _actions *
+│       ├── _reducers *
+│       ├── components *
+│       │   └── views  
+│       │       ├── Footer 
+│       │       │   └── Footer.js
+│       │       ├── LandingPage
+│       │       │   └── LandingPage.js
+│       │       ├── LoginPage 
+│       │       │   └── LoginPage.js
+│       │       ├── NavBar
+│       │       │   └── NavBar.js
+│       │       └── RegisterPage
+│       │           └── RegisterPage.js
+│       ├── hoc *
+│       ├── utils *
+│       ├── App.css
+│       ├── App.js
+│       ├── config.js *
+│       ├── index.js
+│       ├── reportWebVitals.js
+│       ├── setupTests.js
+│       ├── .gitignore
+│       ├── package.json
+│       ├── README.md
+│       └── yarn.lock
+└── server
+    └── ...
 ```
