@@ -545,7 +545,7 @@ app.get('/api/users/logout', auth, (req, res) => {
 ``` 
 
 # Client와 Server 분리
-1. 최상위 폴터에 Clent와 Server 디렉토리 생성
+1. 최상위 폴더에 Client와 Server 디렉토리 생성
 2. `/server.js` / `config` 폴더 / `middleware` 폴더 를 Server 에 옮긴다.    
     주의: `import`와 같은 파일 경로도 함께 바꿔야함.
 3. Client 폴더로 들어가 CRA 라액트 시작하기
