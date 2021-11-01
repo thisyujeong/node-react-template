@@ -794,7 +794,7 @@ ReactDOM.render(
 ```
 
 ### Reducers
-각 기능에 따른 리듀서 생성 후 combineReducers 를 이용해 하나의 rootRecuder로 합쳐주는 작업
+각 기능에 따른 리듀서 생성 후 combineReducers 를 이용해 하나의 rootRecuder로 합쳐주는 작업 진행
 ```js
 /* client/src/_reducers/index.js */
 import { combineReducers } from 'redux';

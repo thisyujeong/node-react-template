@@ -7,8 +7,8 @@ function LandingPage(props) {
       .then(response => console.log(response.data));
   }, []);
   return (
-    <div>
-      Landing Page
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', with: '100%', height: '100vh' }}>
+      <h2>시작 페이지</h2>
     </div>
   );
 }
