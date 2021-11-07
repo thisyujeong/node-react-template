@@ -1,6 +1,23 @@
 # node-react-template
 노드 + 리액트 템플릿입니다. ([참고](https://www.youtube.com/playlist?list=PL9a7QRYt5fqkZC9jc7jntD1WuAogjo_9T))
 
+
+- 계정 생성 기능
+- 로그인 기능
+- 로그아웃 기능
+- 사용자 인증 기능
+
+
+### Tech
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=black"/> <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"/> <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=Redux&logoColor=white"/> <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white"/> <img src="https://img.shields.io/badge/Node.JS-339933?style=for-the-badge&logo=Node.js&logoColor=white"/> <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=Express&logoColor=white"/> <img src="https://img.shields.io/badge/AntDesign-0170FE?style=for-the-badge&logo=AntDesign&logoColor=white"/>
+
+
+### UI 
+Antd 시스템 프레임워크 사용
+
+<img width="100%" alt="Screen Shot 2021-11-07 at 8 49 53 PM" src="https://user-images.githubusercontent.com/85509993/140643681-45fbbd3c-6eff-4872-b350-a108d455b3cf.png">
+<img width="100%" alt="Screen Shot 2021-11-07 at 8 50 02 PM" src="https://user-images.githubusercontent.com/85509993/140643685-f3cd1910-526d-4d78-b722-bce5e7d3c21e.png">
+
 # Index
 ### Server
 - [Initial Setting](#initial-setting)
