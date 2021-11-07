@@ -33,7 +33,7 @@ export default function(SpecificComponent, option, adminRoute = null) {
           }
         }
       });
-    }, []);
+    }, [dispatch, props.history]);
 
     return(<SpecificComponent {...props}/>)
   }

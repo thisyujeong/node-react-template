@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
+import NavBar from '../NavBar/NavBar';
 
 function LandingPage(props) {
   useEffect(() => {
@@ -7,23 +8,21 @@ function LandingPage(props) {
       .then(response => console.log(response.data));
   }, []);
 
-  const onClickHandler = (e) => {
-    e.preventDefault();
-    axios.get(`api/users/logout`)
-    .then(response => {
-      console.log(response.data);
-      if(response.data.success) {
-        props.history.push('/login');
-      } else {
-        alert('Failed to sign out.');
-      }
-    })
+  const style = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 'calc(100vh - 46px)'
   }
+  
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', with: '100%', height: '100vh' }}>
-      <h2>시작 페이지</h2>
-      <button onClick={onClickHandler}>로그아웃</button>
-    </div>
+    <>
+      <NavBar />
+      <div style={style}>
+        <h2>Hello <strong style={{color: '#1890ff'}}>Node-React-Template!</strong></h2>
+      </div>
+    </>
   );
 }
 

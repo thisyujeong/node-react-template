@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../../_actions/user_action';
+import { Form, Input, Button } from 'antd';
+import NavBar from '../NavBar/NavBar';
 
 function RegisterPage(props) {
   const dispatch = useDispatch();
@@ -26,8 +28,6 @@ function RegisterPage(props) {
   }
 
   const onSubmitHandler = (e) => {
-    e.preventDefault();
-
     if(password !== confirmPassword) {
       return alert('비밀번호가 일치하지 않습니다.');
     }
@@ -50,28 +50,81 @@ function RegisterPage(props) {
       });
   }
 
+  const style = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 'calc(100vh - 46px)'
+  }
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', with: '100%', height: '100vh' }}>
-      <form 
-        style={{ display: 'flex', flexDirection: 'column' }}
-        onSubmit={onSubmitHandler}
-      >
-        <label>Email</label>
-        <input type="email" value={email} onChange={onEmailHandler}/>
-
-        <label>Name</label>
-        <input type="text" value={name} onChange={onNameHandler}/>
-
-        <label>Password</label>
-        <input type="password" value={password} onChange={onPasswordHandler}/>
-
-        <label>Confirm Password</label>
-        <input type="password" value={confirmPassword} onChange={onConfirmPasswordHandler}/>
-
-        <br />
-        <button type="submit" >회원가입</button>
-      </form>
-    </div>
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <div style={style}>
+        <Form 
+          onFinish={onSubmitHandler} 
+          labelCol={{ span: 10 }} 
+          wrapperCol={{ span: 16 }}
+        >
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Email!',
+              },
+            ]}
+          >
+            <Input value={email} onChange={onEmailHandler}/>
+          </Form.Item>
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Name!',
+              },
+            ]}
+          >
+            <Input value={name} onChange={onNameHandler}/>
+          </Form.Item>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Password!',
+              },
+            ]}
+          >
+            <Input.Password value={password} onChange={onPasswordHandler}/>
+          </Form.Item>
+          <Form.Item
+            label="Confirm Password"
+            name="confirm password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Password!',
+              },
+            ]}
+          >
+            <Input.Password value={confirmPassword} onChange={onConfirmPasswordHandler}/>
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 10, span: 16 }} >
+            <Button type="primary" htmlType="submit">
+              Sing Up
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </>
   );
 }
 
