@@ -6,9 +6,9 @@ import { auth } from '../../../_actions/user_action';
 import { useDispatch } from 'react-redux';
 
 function NavBar(props) {
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [current, setCurrent] = useState('home');
-  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(auth())
@@ -19,7 +19,7 @@ function NavBar(props) {
         setIsLogin(false);
       }
     });
-  }, [dispatch, isLogin]);
+  });
   
   const onClickHandler = (e) => {
     e.preventDefault();
@@ -35,7 +35,6 @@ function NavBar(props) {
   }
 
   const onMenuClickHandler = (e) => {
-    console.log(e);
     setCurrent(e.key);
   }
 
