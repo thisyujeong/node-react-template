@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 
 function NavBar(props) {
   const [isLogin, setIsLogin] = useState(false);
+  const [current, setCurrent] = useState('home');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,9 +34,14 @@ function NavBar(props) {
     })
   }
 
+  const onMenuClickHandler = (e) => {
+    console.log(e);
+    setCurrent(e.key);
+  }
+
   return (
     <header>
-      <Menu mode="horizontal" >
+      <Menu onClick={onMenuClickHandler} selectedKeys={[current]} mode="horizontal" >
         <Menu.Item key="home"><Link to="/">Home</Link></Menu.Item>
         { !isLogin && <Menu.Item key="register"><Link to="/register">Register</Link></Menu.Item> }
         <Menu.Item key="sign" style={{ marginLeft: 'auto' }}>

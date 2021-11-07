@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import NavBar from '../NavBar/NavBar';
 
 function LandingPage(props) {
   useEffect(() => {
@@ -17,12 +16,9 @@ function LandingPage(props) {
   }
   
   return (
-    <>
-      <NavBar />
-      <div style={style}>
-        <h2>Hello <strong style={{color: '#1890ff'}}>Node-React-Template!</strong></h2>
-      </div>
-    </>
+    <div style={style}>
+      <h2>Hello <strong style={{color: '#1890ff'}}>Node-React-Template!</strong></h2>
+    </div>
   );
 }
 
