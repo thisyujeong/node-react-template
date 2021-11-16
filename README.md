@@ -9,7 +9,10 @@
 
 ### Get Started
 
-##### 1. 템플릿에 사용된 라이브러리 설치
+##### 1. 라이브러리 설치
+
+템플릿에 사용된 라이브러리를 설치합니다.  
+**root 경로의 `package.json`에서 확인 가능**
 
 ```
 yarn add antd bcrypt body-parser concurrently cookie-parser express jsonwebtoken mongoose
@@ -27,7 +30,19 @@ npm install
 yarn add react-script
 ```
 
-##### 4. 프로젝트 실행
+##### 4. mongoDB 연결
+
+`/server/config` 경로에 `dev.js` 파일 추가 후 mongoDB URI 연결.
+
+```js
+// Example
+module.exports = {
+  mongoURI:
+    'mongodb+srv://<userID>:<password>@boiler-plate.pv0or.mongodb.net/<DatabaseName>?retryWrites=true&w=majority',
+};
+```
+
+##### 5. 프로젝트 실행
 
 ```
 npm run dev
