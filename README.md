@@ -15,7 +15,7 @@
 **root 경로의 `package.json`에서 확인 가능**
 
 ```
-yarn add antd bcrypt body-parser concurrently cookie-parser express jsonwebtoken mongoose
+yarn
 ```
 
 ##### 2. ./clent 경로에서 npm 설치
